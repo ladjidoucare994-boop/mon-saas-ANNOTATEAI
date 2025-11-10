@@ -1,5 +1,3 @@
-nano app/api/instant-annotation/route.js
-nano app/api/instant-annotation/route.js
 import { NextResponse } from 'next/server'
 
 export async function POST(request) {
@@ -13,7 +11,9 @@ export async function POST(request) {
       )
     }
 
-    let prompt = ''if (task_type === 'text' || task_type === 'sentiment') {
+    let prompt = ''
+    
+    if (task_type === 'text' || task_type === 'sentiment') {
       const texts = Array.isArray(data) ? data : [data]
       
       prompt = `You are an expert in sentiment analysis.
@@ -34,7 +34,9 @@ Respond with ONLY a JSON object (no markdown):
     }
   ],
   "overall_confidence": 0.95
-}`} else {
+}`
+
+    } else {
       prompt = `You are an annotation expert.
 
 Task Type: ${task_type}
@@ -53,7 +55,8 @@ Respond with ONLY a JSON object:
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.EMERGENT_LLM_KEY}`
-      },body: JSON.stringify({
+      },
+      body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
           {
@@ -75,7 +78,9 @@ Respond with ONLY a JSON object:
     }
 
     const emergentData = await emergentResponse.json()
-    const aiResponse = emergentData.choices[0].message.contentlet annotationData
+    const aiResponse = emergentData.choices[0].message.content
+
+    let annotationData
     try {
       const cleanResponse = aiResponse
         .replace(/```json\n?/g, '')

@@ -9,7 +9,9 @@ export async function POST(request) {
         { error: 'Missing required fields' },
         { status: 400 }
       )
-    }const prompt = `You are a pricing expert for annotation services.
+    }
+
+    const prompt = `You are a pricing expert for annotation services.
 
 Task Description: ${description}
 Task Type: ${task_type}
@@ -26,7 +28,8 @@ Respond with ONLY a JSON object (no markdown):
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.EMERGENT_LLM_KEY}`
-      },body: JSON.stringify({
+      },
+      body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
           {
@@ -48,7 +51,9 @@ Respond with ONLY a JSON object (no markdown):
     }
 
     const emergentData = await emergentResponse.json()
-    const aiResponse = emergentData.choices[0].message.contentlet pricingData
+    const aiResponse = emergentData.choices[0].message.content
+
+    let pricingData
     try {
       const cleanResponse = aiResponse
         .replace(/```json\n?/g, '')
